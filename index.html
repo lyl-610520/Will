@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Just in Time - 恰逢其时</title>
+    
+    <!-- PWA配置 -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#667eea">
+    
+    <!-- Apple设备适配 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Just in Time">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    
+    <!-- 图标 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- 字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 入场动画 -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <div class="logo-animation">
+                <svg class="app-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="url(#gradient)" stroke-width="3" fill="none" opacity="0.8"/>
+                    <path d="M50 15 L55 45 L85 50 L55 55 L50 85 L45 55 L15 50 L45 45 Z" fill="url(#gradient)"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#667eea"/>
+                            <stop offset="100%" style="stop-color:#764ba2"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <h1 class="splash-title">Just in Time</h1>
+            <p class="splash-subtitle">恰逢其时</p>
+            <button class="skip-btn" id="skip-splash">跳过</button>
+        </div>
+    </div>
+
+    <!-- 主应用容器 -->
+    <div id="app" class="app-container">
+        <!-- 动态背景层 -->
+        <div class="background-layer">
+            <canvas id="background-canvas" class="background-canvas"></canvas>
+            <div class="gradient-overlay"></div>
+        </div>
+
+        <!-- 特效层 -->
+        <canvas id="effects-canvas" class="effects-canvas"></canvas>
+
+        <!-- 音乐播放器 -->
+        <div class="music-player" id="music-player">
+            <div class="player-content">
+                <button class="music-btn" id="play-pause-btn">
+                    <svg class="play-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <svg class="pause-icon" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                    </svg>
+                </button>
+                <div class="song-info">
+                    <span class="song-title" id="current-song">曲目一</span>
+                </div>
+                <button class="music-btn" id="next-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                    </svg>
+                </button>
+                <button class="music-btn" id="add-music-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </button>
+            </div>
+            <input type="file" id="music-upload" accept="audio/mp3,audio/mpeg" multiple style="display: none;">
+        </div>
+
+        <!-- 页面内容 -->
+        <main class="main-content">
+            <div id="page-content" class="page-content"></div>
+        </main>
+
+        <!-- 底部导航 -->
+        <nav class="bottom-nav">
+            <a href="#home" class="nav-item active" data-page="home">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+                <span class="nav-label">首页</span>
+            </a>
+            <a href="#stats" class="nav-item" data-page="stats">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 3v18h18V3H3zm8 16H7v-7h4v7zm6 0h-4V7h4v12z"/>
+                </svg>
+                <span class="nav-label">统计</span>
+            </a>
+            <a href="#wardrobe" class="nav-item" data-page="wardrobe">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span class="nav-label">衣柜</span>
+            </a>
+            <a href="#garden" class="nav-item" data-page="garden">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span class="nav-label">花园</span>
+            </a>
+            <a href="#settings" class="nav-item" data-page="settings">
+                <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+                <span class="nav-label">设置</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- 模态框容器 -->
+    <div id="modal-container" class="modal-container"></div>
+
+    <!-- 脚本 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/weather.js"></script>
+    <script src="js/background.js"></script>
+    <script src="js/effects.js"></script>
+    <script src="js/music.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/pages/home.js"></script>
+    <script src="js/pages/stats.js"></script>
+    <script src="js/pages/wardrobe.js"></script>
+    <script src="js/pages/garden.js"></script>
+    <script src="js/pages/settings.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
+    <script src="sw-register.js"></script>
+</body>
+</html>
